@@ -13,14 +13,10 @@ class TestCreateOrder:
     def test_create_order_complite(self, data_form_order, color):
 
         create_order = AO()
-        modify = data_form_order
-        dynamic_title = 'без передачи параметра цвета'
-        if color:
-            modify["color"] = color
-            dynamic_title = f'с параметром цвета = {color}'
+        modify = create_order.modify_add_data_list(data_form_order, "color", color)
 
         request = create_order.add_order_list(data_form_order)
-        allure.dynamic.title(f'Создания заказа на самокат {dynamic_title}')
+        allure.dynamic.title(f'Создания заказа на самокат с параметром цвета {color}')
         allure.dynamic.description(
             f"Отправить запрос POST на регистрацию нового курьера\n"
             f"Действие: отправка POST с данными: {modify} на {API.ORDER_COURIER}.\n"

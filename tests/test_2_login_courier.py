@@ -1,4 +1,5 @@
 import allure
+import pytest
 import API.action_courier as AC
 from data import API, Request
 
@@ -65,15 +66,21 @@ class TestLoginCourier:
             f"получено {request.json()}. URL: {request.url}"
         )
 
-    @allure.title('Выполнение входа в учетную запись без поля пароль')
-    def test_login_courier_no_password_access_denite_return_error_msg(self, registration_data):
+    @allure.title('Выполнение входа в учетную запись без обязательного поля')
+    @pytest.mark.parametrize(
+            'modify_index',[0,1],
+            ids=["no_login","no_password"]
+            )
+    def test_login_courier_no_password_access_denite_return_error_msg(self, registration_data, modify_index):
         action = AC.ActionCourier()
-        request = action.post_login_courier(registration_data[0], False)
+        reg_data = registration_data.copy()
+        reg_data[modify_index] = False
+        request = action.post_login_courier(reg_data[0], reg_data[1])
         status_code = 400
         
         allure.dynamic.description(
             f"Отправить запрос POST на вход в аккаунт курьера\n"
-            f"Действие: отправка POST с данными: {registration_data[0]} на {API.LOGIN_COURIER}.\n"
+            f"Действие: отправка POST с данными: {reg_data} на {API.LOGIN_COURIER}.\n"
             f"Ожидаемый результат: возвращается ошибка с кодом 400 и сообщением {Request.LOGIN_COURIER[status_code]}"
         )
         #в postman ситуация та-же, после timeout выходит ошибка 504, эмулировать через мок нельзя, так как результат будет недостоверным

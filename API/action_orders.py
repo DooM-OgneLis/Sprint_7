@@ -38,3 +38,10 @@ class ActionOrder(BaseFunction):
                     json=get_filter
                 )
         return request
+
+    @allure.step('модифицировать или изменить словарь')
+    def modify_add_data_list(self, data_list, modify_key, modify_item = False):
+        new_dl = data_list
+        if modify_item:
+            new_dl[modify_key] = modify_item
+        return new_dl

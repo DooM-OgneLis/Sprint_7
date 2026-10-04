@@ -38,24 +38,3 @@ def random_date_for_delivery():
     today = date.today()
     offset = random.randint(1, 14)
     return (today + timedelta(days=offset)).strftime("%Y-%m-%d")
-
-def generate_color_list():
-    result = []
-    if random.choice([True, False]):      # Решаем, нужен ли BLACK
-        result.append("BLACK")
-    if random.choice([True, False]):      # Решаем, нужен ли GREY
-        result.append("GREY")
-    return result
-
-test = {
-        "firstName": name_generator(),
-        "lastName": last_name_generator(),
-        "address": adress_generator(),
-        "metroStation": random_index_metroStation(),        
-        "deliveryDate": random_date_for_delivery(),
-        "phone": random_phone(),
-        "rentTime": 3,
-        "color": generate_color_list()
-}
-print(test["firstName"])
-print(name_generator())

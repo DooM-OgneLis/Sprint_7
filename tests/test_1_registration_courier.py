@@ -29,16 +29,22 @@ class TestRegistrationCourier:
             f"получено {request.json()}. URL: {request.url}"
         )
 
-    @allure.title('Проверка вывода ошибки при отправки формы без поля пароль')
-    def test_registration_courier_is_send_form_no_password_error_write_viev(self, registration_data):
+    @allure.title('Проверка вывода ошибки при отправки формы без обязательного поля')
+    @pytest.mark.parametrize(
+        'modify_index',[0,1,2],
+        ids=["no_login","no_password","no_firstName"]
+        )
+    def test_registration_courier_is_send_form_no_password_error_write_viev(self, registration_data, modify_index):
         action = AC.ActionCourier()
-        request = action.post_registration_courier(registration_data[0], False, registration_data[2])
+        reg_data = registration_data.copy()
+        reg_data[modify_index] = False
+        request = action.post_registration_courier(reg_data[0], reg_data[1], reg_data[2])
 
         status_code = 400
 
         allure.dynamic.description(
             f"Отправить запрос POST на регистрацию нового курьера\n"
-            f"Действие: отправка POST с данными: [{registration_data[0]}, {registration_data[2]}] на {API.CREATE_COURIER}.\n"
+            f"Действие: отправка POST с данными: {reg_data} на {API.CREATE_COURIER}.\n"
             f"Ожидаемый результат: возвращается ошибка с кодом 400 и сообщением {Request.CREATE_COURIER[status_code]}"
         )
         
